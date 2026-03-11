@@ -1,0 +1,2 @@
+The files here are direct outputs from the main script.
+These can be used as example .xml implementation for GPR surveys in DIGGS format.
