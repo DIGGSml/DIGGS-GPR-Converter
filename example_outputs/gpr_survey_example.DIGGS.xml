@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='utf-8'?>
+<diggs:Diggs xmlns:diggs="http://diggsml.org/schemas/3" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://diggsml.org/schemas/3 http://diggsml.org/schemas/3.0.0/Diggs.xsd" xml:lang="en">
+  <diggs:documentInformation>
+    <diggs:DocumentInformation>
+      <gml:description>File generated via GPR-to-DIGGS conversion script v0.1
+Contains references for all data files and some documentation for project gpr_survey_example</gml:description>
+      <diggs:creationDate>2026-03-09</diggs:creationDate>
+      <diggs:author>
+        <diggs:BusinessAssociate gml:id="author_RCutts">
+          <gml:name>Ross Cutts / DIGGS Team</gml:name>
+        </diggs:BusinessAssociate>
+      </diggs:author>
+      <diggs:sourceSoftware>
+        <diggs:SoftwareApplication gml:id="sw_01_v0.1">
+          <gml:name>GPR-to-DIGGS Converter Script</gml:name>
+          <diggs:version>0.1</diggs:version>
+        </diggs:SoftwareApplication>
+      </diggs:sourceSoftware>
+    </diggs:DocumentInformation>
+  </diggs:documentInformation>
+  <diggs:project>
+    <diggs:Project gml:id="project_gpr_001">
+      <gml:description>Dummy dataset for testing GPR to DIGGS conversion script.</gml:description>
+      <gml:name>gpr_survey_example</gml:name>
+      <diggs:referencePoint>
+        <diggs:PointLocation gml:id="project_ref_point">
+          <gml:pos srsName="EPSG:4326" srsDimension="2">-115.0 34.0</gml:pos>
+        </diggs:PointLocation>
+      </diggs:referencePoint>
+    </diggs:Project>
+  </diggs:project>
+  <diggs:measurement>
+    <diggs:GeophysicalFieldSurvey gml:id="survey_001">
+      <gml:description>Ground Penetrating Radar survey near Latitude: 34.0 Longitude: -115.0. Contains 0 transects.</gml:description>
+      <gml:name>gpr_survey_example GPR Field Survey</gml:name>
+      <gml:projectRef xlink:href="#project_gpr_001"/>
+      <diggs:outcome>
+        <GP_SurveyResult gml:id="results_001">
+          <diggs:dataPackage>
+            <diggs:DataPackage>
+              <gml:name/>
+              <diggs:files>
+                <diggs:GP_FieldDataFile gml:id="file_dzt_001">
+                  <gml:name>Line 01 Raw GPR Data (GSSI DZT)</gml:name>
+                  <diggs:fileURL>data\line_01.dzt</diggs:fileURL>
+                  <diggs:fileType>dzt</diggs:fileType>
+                  <diggs:fileType>raw field data</diggs:fileType>
+                  <diggs:fileDate>2026-02-11 13:11:20</diggs:fileDate>
+                  <diggs:mimeType>Other: application/x-dzt</diggs:mimeType>
+                </diggs:GP_FieldDataFile>
+                <diggs:GP_FieldDataFile gml:id="file_grd_001">
+                  <gml:name>Line 01 Processed Geographic Grid</gml:name>
+                  <diggs:fileURL>data\line_01_processed.grd</diggs:fileURL>
+                  <diggs:fileType>grd</diggs:fileType>
+                  <diggs:fileType>processed data</diggs:fileType>
+                  <diggs:fileDate>2026-02-11 13:11:20</diggs:fileDate>
+                </diggs:GP_FieldDataFile>
+                <diggs:GP_FieldDataFile gml:id="file_dxf_001">
+                  <gml:name>Line 01 Profile Drawing</gml:name>
+                  <diggs:fileURL>data\line_01_profile.dxf</diggs:fileURL>
+                  <diggs:fileType>dxf</diggs:fileType>
+                  <diggs:fileType>drawing</diggs:fileType>
+                  <diggs:fileDate>2026-02-11 13:11:20</diggs:fileDate>
+                </diggs:GP_FieldDataFile>
+                <diggs:GP_FieldDataFile gml:id="file_image_generated_001">
+                  <gml:name>Diggsfig001 Line 01 Processed Image</gml:name>
+                  <diggs:fileURL>GPR2DIGGS_gen_figs\diggsfig001_line_01_processed.png</diggs:fileURL>
+                  <diggs:fileType>png</diggs:fileType>
+                  <diggs:fileType>data visualization</diggs:fileType>
+                  <diggs:fileDate>2026-03-09 03:58:18.805926</diggs:fileDate>
+                  <diggs:mimeType>image/png</diggs:mimeType>
+                </diggs:GP_FieldDataFile>
+                <diggs:GP_FieldDataFile gml:id="file_sgy_001">
+                  <gml:name>Line 01 Raw GPR Data (SEG-Y)</gml:name>
+                  <diggs:fileURL>data\line_01.sgy</diggs:fileURL>
+                  <diggs:fileType>sgy</diggs:fileType>
+                  <diggs:fileType>raw field data</diggs:fileType>
+                  <diggs:fileDate>2026-02-11 13:11:20</diggs:fileDate>
+                  <diggs:mimeType>Other: application/x-segy</diggs:mimeType>
+                </diggs:GP_FieldDataFile>
+                <diggs:GP_FieldDataFile gml:id="file_sgy_001">
+                  <gml:name>Line 02 Raw GPR Data (SEG-Y)</gml:name>
+                  <diggs:fileURL>data\line_02.sgy</diggs:fileURL>
+                  <diggs:fileType>sgy</diggs:fileType>
+                  <diggs:fileType>raw field data</diggs:fileType>
+                  <diggs:fileDate>2026-02-11 13:11:20</diggs:fileDate>
+                  <diggs:mimeType>Other: application/x-segy</diggs:mimeType>
+                </diggs:GP_FieldDataFile>
+                <diggs:GP_FieldDataFile gml:id="file_csv_001">
+                  <gml:name>Line 01 Picks Delineated Text File</gml:name>
+                  <diggs:fileURL>data\line_01_picks.csv</diggs:fileURL>
+                  <diggs:fileType>csv</diggs:fileType>
+                  <diggs:fileType>metadata or interpretation</diggs:fileType>
+                  <diggs:fileDate>2026-02-11 13:10:38</diggs:fileDate>
+                  <diggs:mimeType>text/csv</diggs:mimeType>
+                </diggs:GP_FieldDataFile>
+                <diggs:GP_FieldDataFile gml:id="file_image_other_001">
+                  <gml:name>Diggsfig001 Line 01 Processed Image</gml:name>
+                  <diggs:fileURL>GPR2DIGGS_gen_figs\diggsfig001_line_01_processed.png</diggs:fileURL>
+                  <diggs:fileType>png</diggs:fileType>
+                  <diggs:fileType>image</diggs:fileType>
+                  <diggs:fileDate>2026-03-09 03:58:18.805926</diggs:fileDate>
+                  <diggs:mimeType>image/png</diggs:mimeType>
+                </diggs:GP_FieldDataFile>
+              </diggs:files>
+            </diggs:DataPackage>
+          </diggs:dataPackage>
+        </GP_SurveyResult>
+      </diggs:outcome>
+      <diggs:geophysicalMethod>ground penetrating radar</diggs:geophysicalMethod>
+      <diggs:procedure>
+        <GP_FieldProcedure gml:id="procedure_001">
+          <gml:description>Standard GPR survey using cart-mounted, 400 MHz shielded antenna with continuous acquisition along transect lines.</gml:description>
+          <gml:name>GPR Field Procedure near Latitude: 34.0 Longitude: -115.0</gml:name>
+          <diggs:receiverEquipment>
+            <diggs:GP_Receiver gml:id="receiver_001">
+              <gml:name>400 MHz Shielded Antenna (Rx)</gml:name>
+              <diggs:class>GPR antenna</diggs:class>
+              <diggs:make>GSSI</diggs:make>
+              <diggs:modelNumber>Model 5103A</diggs:modelNumber>
+              <diggs:serialNumber>SN-2024-0042</diggs:serialNumber>
+              <diggs:receiverType>radio wave antenna</diggs:receiverType>
+              <diggs:isGroup>false</diggs:isGroup>
+            </diggs:GP_Receiver>
+          </diggs:receiverEquipment>
+          <diggs:sourceEquipment>
+            <diggs:GP_Source gml:id="source_001">
+              <gml:name>400 MHz Shielded Antenna (Tx)</gml:name>
+              <diggs:class>GPR antenna</diggs:class>
+              <diggs:make>GSSI</diggs:make>
+              <diggs:modelNumber>Model 5103A</diggs:modelNumber>
+              <diggs:serialNumber>SN-2024-0042</diggs:serialNumber>
+              <diggs:sourceType>impulsive</diggs:sourceType>
+              <diggs:isGroup>false</diggs:isGroup>
+            </diggs:GP_Source>
+          </diggs:sourceEquipment>
+          <diggs:dataAcquisitionSystem>
+            <diggs:GP_DataAcquisitionSystem gml:id="data_acq_001">
+              <gml:name>GSSI SIR 4000</gml:name>
+              <diggs:make>GSSI</diggs:make>
+              <diggs:modelNumber>SIR 4000</diggs:modelNumber>
+              <diggs:serialNumber>SIR4-2023-0088</diggs:serialNumber>
+              <diggs:numberChannels>1</diggs:numberChannels>
+            </diggs:GP_DataAcquisitionSystem>
+          </diggs:dataAcquisitionSystem>
+          <diggs:recordingParameters>
+            <diggs:Parameter>
+              <diggs:parameterName>Center Frequency</diggs:parameterName>
+              <diggs:parameterValue>400</diggs:parameterValue>
+              <diggs:parameterUnits>MHz</diggs:parameterUnits>
+            </diggs:Parameter>
+            <diggs:Parameter>
+              <diggs:parameterName>Samples per Scan</diggs:parameterName>
+              <diggs:parameterValue>512</diggs:parameterValue>
+            </diggs:Parameter>
+            <diggs:Parameter>
+              <diggs:parameterName>Time Range</diggs:parameterName>
+              <diggs:parameterValue>50</diggs:parameterValue>
+              <diggs:parameterUnits>ns</diggs:parameterUnits>
+            </diggs:Parameter>
+            <diggs:Parameter>
+              <diggs:parameterName>Scans per Meter</diggs:parameterName>
+              <diggs:parameterValue>50</diggs:parameterValue>
+              <diggs:parameterUnits>1/m</diggs:parameterUnits>
+            </diggs:Parameter>
+            <diggs:Parameter>
+              <diggs:parameterName>Stacking</diggs:parameterName>
+              <diggs:parameterValue>32</diggs:parameterValue>
+            </diggs:Parameter>
+          </diggs:recordingParameters>
+        </GP_FieldProcedure>
+      </diggs:procedure>
+    </diggs:GeophysicalFieldSurvey>
+  </diggs:measurement>
+</diggs:Diggs>
