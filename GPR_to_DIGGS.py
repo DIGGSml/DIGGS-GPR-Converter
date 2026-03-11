@@ -13,23 +13,31 @@
 # 
 
 # 
-# Miniguide:
-#   Script sections from top to bottom:
+# Script Structure Miniguide:
 #   1. Global variables and defaults
 #   2. General utility functions
 #   3. User input functions
 #   4. Define documentation strings
-#   5. Generate DIGGS xml elements
-#   6. Parsing and plotting scripts
-#   7. Main initializer script
-#   8. Argument parsing from command line call
+#   5. xml utilities (ie. id constructors)
+#   6. Generate DIGGS xml elements
+#   7. Parsing geographic files
+#   8. Plotting functions
+#   9. Main initializer script
+#   10. Argument parsing from command line call
 # 
-#   Tasks for adding new supported file types:
-#   1. Add file extension, description, and any associated file extensions that can be discarded to the corresponding lists in defaults section
+# Tasks for adding new supported file types:
+#   1. Map file extension, descriptions, and any associated file extensions or documentation into the global dictionaries
 #   2. Add function importing the file type and loading it into the DIGGS structure correctly
-#   3. Add function from 2. call and error handling to main function
+#   3. Add function from 2. call to main function, fitting it into prioritization of geometry, etc
 # 
 # Dev: Areas which need work are commented with "Dev:" for an easy ctrl+F search 
+# 
+# Dev: Major tasks: Read .grd files and save raster points directly in DIGGS xml (not difficult, but would greatly increase size of xml file.(ie. 500 X 500 per slice with 5 slices = 1,250,000 points))
+#                   Create figures directly from resulting diggs xml file rather than from source file: allows future plotting of any diggs xml file and more standardized plotting
+#                     -alternatively, allow reading of zipped diggs file to create/show images from source files
+#                   Add optionality to have multiple surveys based on folder structure
+#                   Use classes for different file types instead of complex and confusing dictionaries
+# 
 
 import os
 import sys
@@ -50,13 +58,6 @@ from matplotlib import pyplot as plt
 from matplotlib.collections import LineCollection
 import matplotlib.cm as cm
 import matplotlib.colors as colors
-try:
-    import ezdxf
-    from ezdxf.addons.drawing import Frontend, RenderContext
-    from ezdxf.addons.drawing.matplotlib import MatplotlibBackend
-except ModuleNotFoundError as err:
-    warnings.warn("Python package 'ezdxf' not found: .dxf files will not be plotted.")
-
 
 version = "0.1" # Version of this script
 
@@ -80,12 +81,12 @@ default_root_attributes = {
 
 
 # Dev: These dictionaries could be replaced with classes for cleaner usage
-supported_file_extensions = [".shp", ".dzt", ".grd", ".dxf", ".txt"]
+supported_file_extensions = [".shp", ".dzt", ".grd", ".dxf", ".txt"] # Import for geography or image creation
 supported_file_descriptions = ["geographic shapefile", "GSSI Raw GPR data file", "geographic raster grid file (any raster will work)", "CAD file for 3-D visualization", "text file with results documentation"]
-enveloped_file_extensions = [".sgy", ".pdf", ".csv"]
-image_extensions = [".png", ".jpg", ".gif", ".bmp", ".tiff", ".svg", ".ico"]
-shp_extensions = [".shx", ".dbf", ".prj", ".cpg", ".sbn", ".sbx", ".fbn", ".fbx"] # Dev: verify these extensions and add .xml by comparing file stems
-dzt_extensions = [".dzg", ".dzx", ".dza", ".plt", ".tmf", ".b3d", ".bzx"] # Dev: verify these extensions by comparing file stems
+enveloped_file_extensions = [".sgy", ".pdf", ".csv"] # Don't import, but should definitely be packaged
+image_extensions = [".png", ".jpg", ".gif", ".bmp", ".tiff", ".svg", ".ico"] # Packaged
+shp_extensions = [".shx", ".dbf", ".prj", ".cpg", ".sbn", ".sbx", ".fbn", ".fbx"] # Associated extensions for shapefile Dev: verify the files with these extensions and add to .xml by comparing file stems, add shapefile.xml parsing to obtain shapefile metadata
+dzt_extensions = [".dzg", ".dzx", ".dza", ".plt", ".tmf", ".b3d", ".bzx"] # Associated extensions for .dzt files Dev: verify the files with these extensions and add to .xml by comparing file stems
 enveloped_file_extensions += image_extensions + shp_extensions + dzt_extensions
 
 
@@ -101,7 +102,7 @@ file_type_descriptions = {
                                 'pdf':"application/pdf", 'shp_assoc':"Other: application/x-arcgis", 'dzt_assoc':"Other: application/x-dzt",  'unspecified':""}, # Image mimetypes determined by extension later
                           }
 
-# Values for reading documentation into DIGGS file. This is only for ease of reading/ parsing, each key must be manually mapped into the DIGGS file.
+# Values for reading documentation into DIGGS file. This is only for ease of reading/ parsing, each key value must be manually mapped into the DIGGS file.
 base_equip_keys = ["proc_desc", "manufacturer", "antenn", "antenn_model", "antenn_serial", "comp_model", "comp_serial", "samp_scan", "time_range", "scan_met", "stacking"]
 equip_key_questions = [
                        "Briefly describe the data collection process. (None OK) ", "str",
@@ -119,17 +120,17 @@ equip_key_questions = [
 
 base_doc_keys = ["author", "affiliation", "project_name", "project_description", "locality", "ref_xyz", "ref_crs", "ref_lat", "ref_lon", "survey_description"]
 doc_key_parsing = [
-                    ["author"],
-                    ["affil", "org"],
-                    ["projectname"],
-                    ["projectdesc"],
-                    ["locality"],
-                    ["referencepoint", "refpoint", "refpt", "referencexy", "refxy"],
-                    ["referenceepsg", "refepsg", "referencecrs", "refcrs"],
-                    ["lat"],
-                    ["lon"],
-                    ["surveydesc"],
-                   ]
+                   ["author"],
+                   ["affil", "org"],
+                   ["projectname"],
+                   ["projectdesc"],
+                   ["locality"],
+                   ["referencepoint", "refpoint", "refpt", "referencexy", "refxy"],
+                   ["referenceepsg", "refepsg", "referencecrs", "refcrs"],
+                   ["lat"],
+                   ["lon"],
+                   ["surveydesc"],
+                  ]
 doc_key_questions = [
                     "What name should be named as author for this DIGGS file? (Default: computer's username.) ",
                     "What organization is the author affiliated with? (Default: none.) ",
@@ -197,6 +198,14 @@ def transform_point(input_point, inputEPSG, outputEPSG, print_output=False):
 
 
 # --- User input functions ---
+def user_bool(question:str) -> bool:
+    while True:
+        answer = input(question)
+        if answer and answer[0].upper() == "Y" or answer == "1":
+            return True
+        elif answer and answer[0].upper() == "N" or answer == "0":
+            return False
+
 def user_int(question:str, min_val=None, max_val=None) -> int:
     while True:
         answer = input(question)
@@ -482,7 +491,7 @@ def user_equipment(equipment, tracklines_exist=True):
     if not interactive:
         return
     if not tracklines_exist:
-        if not user_bool("No tracklines found, equipment metadata missing. \033[93mWould you like to enter the equipment metadata manually?\033[00m "):
+        if not user_bool("No tracklines found, equipment metadata missing.\n\033[93mWould you like to enter the equipment metadata manually to include it in the diggs file?\033[00m "):
             return
     keys = list(equipment.keys())
     for i, key in enumerate(base_equip_keys):
@@ -1738,7 +1747,7 @@ def main(folder_path, convert=True, plot_figs=False, fig_ext=".png", display_fig
         documentation['file_creation'] = datetime.datetime.now(datetime.UTC).date()
         documentation['doc_description'] = f"""File generated via GPR-to-DIGGS conversion script v{version}
 Contains references and documentation for all data files for project {documentation['project_name']}"""
-        user_equipment(equipment)
+        user_equipment(equipment, most_valid)
 
         # Initialize DIGGS xml
         root = generate_DIGGS_root()
@@ -1845,7 +1854,7 @@ Supported import file types (others are packaged into zip file):
 {" ".join(supported_file_extensions)}
 Notes:
 -Ensure your directory only contains GPR files for the desired project. Files with matching extensions from other survey types may be mis-represented in output DIGGS file if left in scanned directory.
--Interactive mode is recommended to ensure as thorough documentation in resulting DIGGS file as possible.
+-Interactive mode is recommended to ensure as thorough documentation as possible in resulting DIGGS file.
 """
 if __name__ == "__main__":
     target_dir = None
